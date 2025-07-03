@@ -1,0 +1,13 @@
+@import 'tailwindcss';
+
+* {
+  font-family: 'Orbitron', sans-serif;
+}
+
+h1,
+h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
