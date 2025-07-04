@@ -4,7 +4,7 @@ export default function Nav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleNavClick = (e, href) => {
-    e.preventdefault();
+    e.preventDefault(); 
     setIsMenuOpen(false);
 
     const targetId = href.replace('#', '');
@@ -17,8 +17,10 @@ export default function Nav() {
 
       window.scrollTo({
         top: offsetPosition,
-        behaviour: 'smooth',
+        behavior: 'smooth', 
       });
+
+      setIsMenuOpen(false);
     }
   };
 
