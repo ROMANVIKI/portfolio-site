@@ -1,26 +1,18 @@
 import React, { Suspense, useRef, useEffect, useState } from 'react';
-import { Canvas, useFrame, useLoader } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { OrbitControls, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 
-// Earth component
-function Earth({ animationSpeed = 2, autoRotate = true }) {
+// Earth GLB component
+function EarthGLB({ animationSpeed = 2, autoRotate = true }) {
   const meshRef = useRef();
-  const cloudsRef = useRef();
-  const atmosphereRef = useRef();
-
-  // Load textures
-  const [earthTexture, bumpTexture, cloudsTexture, nightTexture, oceanMaskTexture] = useLoader(
-    THREE.TextureLoader,
-    [
-      '/textures/earth albedo.jpg',
-      '/textures/earth bump.jpg',
-      '/textures/clouds earth.png',
-      '/textures/earth night_lights_modified.png',
-      '/textures/earth land ocean mask.png',
-    ]
-  );
-
+  
+  // Load the GLB model
+  const { scene, materials, nodes } = useGLTF('/models/monde.glb');
+  
+  // Clone the scene to avoid issues with multiple instances
+  const clonedScene = scene.clone();
+  
   // GSAP animations
   useEffect(() => {
     if (window.gsap && meshRef.current) {
@@ -31,7 +23,6 @@ function Earth({ animationSpeed = 2, autoRotate = true }) {
         duration: 2,
         ease: 'back.out(1.7)',
       });
-
       window.gsap.to(meshRef.current.position, {
         y: 0.2,
         duration: 3,
@@ -41,54 +32,58 @@ function Earth({ animationSpeed = 2, autoRotate = true }) {
       });
     }
   }, []);
-
+  
   // Frame-based animations
   useFrame((state, delta) => {
-    if (autoRotate) {
-      if (meshRef.current) {
-        meshRef.current.rotation.y += delta * 0.1 * animationSpeed;
-      }
-      if (cloudsRef.current) {
-        cloudsRef.current.rotation.y += delta * 0.12 * animationSpeed;
-      }
-    }
-
-    if (atmosphereRef.current) {
-      atmosphereRef.current.scale.setScalar(1 + Math.sin(state.clock.elapsedTime * 0.5) * 0.02);
+    if (autoRotate && meshRef.current) {
+      meshRef.current.rotation.y += delta * 0.1 * animationSpeed;
     }
   });
+  
+  // Optional: Enhance materials if needed
+  useEffect(() => {
+    if (materials) {
+      Object.values(materials).forEach((material) => {
+        if (material.isMeshStandardMaterial || material.isMeshPhongMaterial) {
+          // Enhance material properties
+          material.metalness = 0.1;
+          material.roughness = 0.8;
+          material.needsUpdate = true;
+        }
+      });
+    }
+  }, [materials]);
+  
+  return (
+    <group ref={meshRef} position={[0, 0, 0]}>
+      <primitive object={clonedScene} />
+    </group>
+  );
+}
 
+// Fallback Earth component (in case GLB fails to load)
+function FallbackEarth({ animationSpeed = 2, autoRotate = true }) {
+  const meshRef = useRef();
+  
+  useFrame((state, delta) => {
+    if (autoRotate && meshRef.current) {
+      meshRef.current.rotation.y += delta * 0.1 * animationSpeed;
+    }
+  });
+  
   return (
     <group>
       <mesh ref={meshRef} position={[0, 0, 0]}>
         <sphereGeometry args={[2, 64, 64]} />
-        <meshPhongMaterial
-          map={earthTexture}
-          bumpMap={bumpTexture}
-          bumpScale={0.1}
-          specularMap={oceanMaskTexture}
-          specular={new THREE.Color(0x222222)}
-          shininess={100}
-        />
+        <meshStandardMaterial color="#4A90E2" wireframe />
       </mesh>
-
-      <mesh ref={cloudsRef} position={[0, 0, 0]}>
-        <sphereGeometry args={[2.01, 64, 64]} />
-        <meshPhongMaterial
-          map={cloudsTexture}
-          transparent={true}
-          opacity={0.6}
-          depthWrite={false}
-        />
-      </mesh>
-
-      <mesh ref={atmosphereRef} position={[0, 0, 0]}>
-        <sphereGeometry args={[2.1, 64, 64]} />
-        <meshPhongMaterial
-          color={0x93cfef}
-          transparent={true}
-          opacity={0.1}
-          side={THREE.BackSide}
+      <mesh position={[0, 0, 0]}>
+        <sphereGeometry args={[2.1, 32, 32]} />
+        <meshStandardMaterial 
+          color="#93cfef" 
+          transparent 
+          opacity={0.1} 
+          side={THREE.BackSide} 
         />
       </mesh>
     </group>
@@ -105,32 +100,78 @@ function Loader() {
   );
 }
 
-// Earth Model Component
+// Error Boundary Component
+function EarthWithFallback({ animationSpeed, autoRotate }) {
+  const [hasError, setHasError] = useState(false);
+  
+  if (hasError) {
+    console.warn('GLB model failed to load, using fallback Earth');
+    return <FallbackEarth animationSpeed={animationSpeed} autoRotate={autoRotate} />;
+  }
+  
+  return (
+    <Suspense fallback={<Loader />}>
+      <EarthGLB 
+        animationSpeed={animationSpeed} 
+        autoRotate={autoRotate}
+        onError={() => setHasError(true)}
+      />
+    </Suspense>
+  );
+}
+
+// Main Earth Model Component
 export default function EarthModel() {
   const [animationSpeed, setAnimationSpeed] = useState(1);
   const [autoRotate, setAutoRotate] = useState(true);
-
+  const [modelInfo, setModelInfo] = useState(null);
+  
+  // Debug info about the loaded model
+  useEffect(() => {
+    // This will run when the component mounts
+    try {
+      const { scene, materials, nodes } = useGLTF('/models/earth.glb');
+      
+      const materialNames = Object.keys(materials || {});
+      const nodeNames = Object.keys(nodes || {});
+      
+      setModelInfo({
+        materials: materialNames,
+        nodes: nodeNames,
+        hasModel: !!scene
+      });
+    } catch (error) {
+      console.error('Error loading GLB model:', error);
+      setModelInfo({ error: error.message });
+    }
+  }, []);
+  
   return (
     <div className='h-full w-full relative'>
-      <Canvas className='w-full h-full' camera={{ position: [0, 0, 8], fov: 45 }}>
+      <Canvas className='w-full mt-4 h-full' camera={{ position: [0, 0, 8], fov: 45 }}>
         <ambientLight intensity={0.7} />
         <directionalLight position={[5, 3, -5]} intensity={7} color={0xffffff} castShadow />
         <pointLight position={[5, 3, -5]} intensity={0.3} color={0x4444ff} />
-
-        <Suspense fallback={<Loader />}>
-          <Earth animationSpeed={animationSpeed} autoRotate={autoRotate} />
-        </Suspense>
-
+        
+        <EarthWithFallback 
+          animationSpeed={animationSpeed} 
+          autoRotate={autoRotate} 
+        />
+        
         <OrbitControls
           enableZoom={true}
           enablePan={true}
           enableRotate={true}
           autoRotate={autoRotate}
-          autoRotateSpeed={0.5}
+          autoRotateSpeed={0.1}
           minDistance={3}
           maxDistance={15}
         />
       </Canvas>
+      
     </div>
   );
 }
+
+// Preload the GLB model
+useGLTF.preload('/models/monde.glb');

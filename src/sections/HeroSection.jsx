@@ -2,7 +2,7 @@
 import EarthModel from './EarthModel';
 export default function HeroSection() {
   return (
-    <section id='hero' className='relative min-h-screen bg-black text-white overflow-hidden'>
+    <section id='hero' className='relative min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900  overflow-hidden'>
       {/* Animated background stars */}
       <div className='absolute inset-0 overflow-hidden'>
         {[...Array(100)].map((_, i) => (

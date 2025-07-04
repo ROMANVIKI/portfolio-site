@@ -3,6 +3,24 @@ import { navLinks } from '../constants/navigation.js';
 export default function Nav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const handleNavClick = (e, href) => {
+    e.preventdefault();
+    setIsMenuOpen(false);
+
+    const targetId = href.replace('#', '');
+    const targetElement = document.getElementById(targetId);
+
+    if (targetElement) {
+      const navHeight = 80;
+      const elementPosition = targetElement.offsetTop;
+      const offsetPosition = elementPosition - navHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behaviour: 'smooth',
+      });
+    }
+  };
 
   return (
     <nav className='fixed font-orbitron top-0 w-full py-4 px-4 lg:px-8 z-50 bg-black/20 backdrop-blur-md border-b border-white/10'>
@@ -16,6 +34,7 @@ export default function Nav() {
             <a
               key={link.id}
               href={link.href}
+              onClick={(e) => handleNavClick(e, link.href)}
               className='text-gray-300 hover:text-white transition-colors duration-300 text-lg font-medium hover:scale-105 transform transition-transform'
             >
               {link.label}
@@ -61,7 +80,7 @@ export default function Nav() {
               <a
                 key={link.id}
                 href={link.href}
-                onClick={() => setIsMenuOpen(false)}
+                onClick={(e) => handleNavClick(e, link.href)}
                 className='text-gray-300 hover:text-white transition-colors duration-300 text-lg font-medium py-2 border-b border-gray-800 last:border-b-0'
               >
                 {link.label}
