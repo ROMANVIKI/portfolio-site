@@ -161,7 +161,7 @@ const Contact = () => {
                 >
                   <ExternalLink className='w-5 h-5 md:w-6 md:h-6 text-gray-400 group-hover:text-pink-400 mr-2 md:mr-3' />
                   <span className='text-gray-300 group-hover:text-white text-sm md:text-base truncate'>
-                    Portfolio
+                    Instagram
                   </span>
                 </a>
               </div>

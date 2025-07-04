@@ -5,7 +5,7 @@ const Skills = () => {
     {
       title: 'Languages',
       icon: <Code className='w-6 h-6' />,
-      skills: ['Python', 'JavaScript', 'SQL', 'C (currently learning)', 'Rust (exploring)'],
+      skills: ['Python', 'JavaScript', 'C (currently learning)', 'Lua (exploring)'],
       gradient: 'from-yellow-500 to-orange-500',
     },
     {
@@ -17,19 +17,27 @@ const Skills = () => {
     {
       title: 'Backend',
       icon: <Server className='w-6 h-6' />,
-      skills: ['Django', 'FastAPI', 'Flask', 'REST APIs', 'WebSockets'],
+      skills: ['Django', 'Flask', 'REST APIs', 'WebSockets'],
       gradient: 'from-green-500 to-emerald-500',
     },
     {
       title: 'DevOps & Tools',
       icon: <Settings className='w-6 h-6' />,
-      skills: ['Docker', 'Git', 'Jenkins', 'Vercel', 'Linux (Arch, Mint, i3wm)', 'Nginx'],
+      skills: [
+        'Docker',
+        'Git',
+        'Vercel',
+        'Linux (Arch, Mint, i3wm)',
+        'Nvim',
+        'Tmux',
+        'Bash Scripting (Basics)',
+      ],
       gradient: 'from-purple-500 to-pink-500',
     },
     {
       title: 'Databases',
       icon: <Database className='w-6 h-6' />,
-      skills: ['PostgreSQL', 'SQLite', 'Redis', 'MongoDB (basics)', 'Firebase (auth & storage)'],
+      skills: ['PostgreSQL', 'SQLite', 'Redis', 'MongoDB (basics)'],
       gradient: 'from-red-500 to-rose-500',
     },
   ];
