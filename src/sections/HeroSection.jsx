@@ -1,8 +1,99 @@
-// Hero Section Component
 import EarthModel from './EarthModel';
+import gsap from 'gsap';
+import { useRef, useEffect } from 'react';
+
 export default function HeroSection() {
+  const nameRef = useRef();
+  const titleRef = useRef();
+  const descRef = useRef();
+  const earthRef = useRef();
+  const nameRefDesktop = useRef();
+  const titleRefDesktop = useRef();
+  const descRefDesktop = useRef();
+  const earthRefDesktop = useRef();
+
+  useEffect(() => {
+    // Create GSAP timeline
+    const tl = gsap.timeline();
+
+    // Mobile elements
+    const mobileElements = [nameRef.current, titleRef.current, descRef.current];
+    // Desktop elements
+    const desktopElements = [
+      nameRefDesktop.current,
+      titleRefDesktop.current,
+      descRefDesktop.current,
+    ];
+
+    // Set initial state for mobile elements
+    gsap.set(mobileElements.filter(Boolean), {
+      opacity: 0,
+      x: 150,
+    });
+
+    // Set initial state for desktop elements
+    gsap.set(desktopElements.filter(Boolean), {
+      opacity: 0,
+      x: 150,
+    });
+
+    // Animate mobile elements
+    tl.to(mobileElements.filter(Boolean), {
+      x: 0,
+      opacity: 1,
+      duration: 0.7,
+      ease: 'power4.out',
+      stagger: 0.2,
+    });
+
+    // Animate desktop elements
+    tl.to(
+      desktopElements.filter(Boolean),
+      {
+        x: 0,
+        opacity: 1,
+        duration: 0.7,
+        ease: 'power4.out',
+        stagger: 0.2,
+      },
+      0
+    ); // Start at the same time as mobile
+
+    // Animate Earth models
+    if (earthRef.current) {
+      gsap.set(earthRef.current, { opacity: 0, y: 50 });
+      tl.to(
+        earthRef.current,
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power4.out',
+        },
+        '-=0.3'
+      );
+    }
+
+    if (earthRefDesktop.current) {
+      gsap.set(earthRefDesktop.current, { opacity: 0, y: 50 });
+      tl.to(
+        earthRefDesktop.current,
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power4.out',
+        },
+        '-=0.3'
+      );
+    }
+  }, []);
+
   return (
-    <section id='hero' className='relative min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900  overflow-hidden'>
+    <section
+      id='hero'
+      className='relative min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 overflow-hidden'
+    >
       {/* Animated background stars */}
       <div className='absolute inset-0 overflow-hidden'>
         {[...Array(100)].map((_, i) => (
@@ -27,19 +118,25 @@ export default function HeroSection() {
             {/* Text Content */}
             <div className='space-y-4'>
               <p className='text-xl sm:text-2xl text-gray-300 animate-fade-in'>Hi 👋 I'm</p>
-              <h1 className='text-4xl sm:text-6xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-fade-in-up'>
+              <h1
+                ref={nameRef}
+                className='text-4xl sm:text-6xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent'
+              >
                 Vikram
               </h1>
-              <h2 className='text-2xl sm:text-3xl font-semibold text-blue-300 animate-fade-in-up'>
+              <h2 ref={titleRef} className='text-2xl sm:text-3xl font-semibold text-blue-300'>
                 Full Stack Developer
               </h2>
-              <p className='text-base sm:text-lg text-gray-400 max-w-md mx-auto leading-relaxed animate-fade-in-up'>
+              <p
+                ref={descRef}
+                className='text-base sm:text-lg text-gray-400 max-w-md mx-auto leading-relaxed'
+              >
                 who builds reliable and UI friendly web applications with modern web frameworks
               </p>
             </div>
 
             {/* Earth Model */}
-            <div className='w-full h-64 sm:h-80 animate-fade-in-up'>
+            <div ref={earthRef} className='w-full h-64 sm:h-80'>
               <EarthModel />
             </div>
           </div>
@@ -47,15 +144,24 @@ export default function HeroSection() {
           {/* Desktop Layout */}
           <div className='hidden lg:grid lg:grid-cols-2 lg:gap-12 lg:items-center lg:min-h-screen'>
             {/* Text Content */}
-            <div className='space-y-6 animate-fade-in'>
-              <p className='text-2xl xl:text-3xl text-gray-300'>Hi 👋 I'm</p>
-              <h1 className='text-6xl xl:text-8xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent leading-tight'>
+            <div className='space-y-6'>
+              <p className='text-2xl xl:text-3xl text-gray-300 animate-fade-in'>Hi 👋 I'm</p>
+              <h1
+                ref={nameRefDesktop}
+                className='text-6xl xl:text-8xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent leading-tight'
+              >
                 Vikram
               </h1>
-              <h2 className='text-3xl xl:text-4xl font-semibold text-blue-300'>
+              <h2
+                ref={titleRefDesktop}
+                className='text-3xl xl:text-4xl font-semibold text-blue-300'
+              >
                 Full Stack Developer
               </h2>
-              <p className='text-xl xl:text-2xl text-gray-400 max-w-2xl leading-relaxed'>
+              <p
+                ref={descRefDesktop}
+                className='text-xl xl:text-2xl text-gray-400 max-w-2xl leading-relaxed'
+              >
                 who builds reliable and UI friendly web applications with modern web frameworks
               </p>
 
@@ -71,7 +177,7 @@ export default function HeroSection() {
             </div>
 
             {/* Earth Model */}
-            <div className='h-screen animate-fade-in-right'>
+            <div ref={earthRefDesktop} className='h-screen'>
               <EarthModel />
             </div>
           </div>

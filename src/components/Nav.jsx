@@ -1,27 +1,20 @@
 import { useState } from 'react';
 import { navLinks } from '../constants/navigation.js';
+import gsap from 'gsap';
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+
+gsap.registerPlugin(ScrollToPlugin); // 👈 REGISTER HERE
 export default function Nav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleNavClick = (e, href) => {
-    e.preventDefault(); 
+    e.preventDefault();
+
     setIsMenuOpen(false);
 
-    const targetId = href.replace('#', '');
-    const targetElement = document.getElementById(targetId);
-
-    if (targetElement) {
-      const navHeight = 80;
-      const elementPosition = targetElement.offsetTop;
-      const offsetPosition = elementPosition - navHeight;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth', 
-      });
-
-      setIsMenuOpen(false);
-    }
+    setTimeout(() => {
+      gsap.to(window, { duration: 2, scrollTo: href, ease: 'circ.inOut' });
+    }, 100);
   };
 
   return (

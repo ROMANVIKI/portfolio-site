@@ -1,6 +1,111 @@
 import { User, Code, Globe, Shield } from 'lucide-react';
+import { useRef, useEffect } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const About = () => {
+  const sectionRef = useRef(null);
+  const sectionTitleRef = useRef(null);
+  const selfCardRef = useRef(null);
+  const card1Ref = useRef(null);
+  const card2Ref = useRef(null);
+  const card3Ref = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Set initial states
+      gsap.set([sectionTitleRef.current, selfCardRef.current, card1Ref.current, card2Ref.current, card3Ref.current], {
+        y: 60,
+        opacity: 0,
+        scale: 0.8,
+        rotateX: 15
+      });
+
+      // Title animation - triggers first
+      gsap.to(sectionTitleRef.current, {
+        y: 0,
+        opacity: 1,
+        scale: 1,
+        rotateX: 0,
+        duration: 0.8,
+        ease: 'back.out(1.7)',
+        scrollTrigger: {
+          trigger: sectionTitleRef.current,
+          start: 'top 80%',
+          toggleActions: 'play none none reverse',
+        }
+      });
+
+      // Self card animation - triggers when card is visible
+      gsap.to(selfCardRef.current, {
+        y: 0,
+        opacity: 1,
+        scale: 1,
+        rotateX: 0,
+        duration: 1,
+        ease: 'elastic.out(1, 0.75)',
+        scrollTrigger: {
+          trigger: selfCardRef.current,
+          start: 'top 85%',
+          toggleActions: 'play none none reverse',
+        }
+      });
+
+      // Description cards with stagger - triggers when first card is visible
+      gsap.to([card1Ref.current, card2Ref.current, card3Ref.current], {
+        y: 0,
+        opacity: 1,
+        scale: 1,
+        rotateX: 0,
+        duration: 0.7,
+        ease: 'power3.out',
+        stagger: {
+          amount: 0.4,
+          from: 'start'
+        },
+        scrollTrigger: {
+          trigger: card1Ref.current,
+          start: 'top 85%',
+          toggleActions: 'play none none reverse',
+        }
+      });
+
+      // Add hover animations for cards
+      const cards = [selfCardRef.current, card1Ref.current, card2Ref.current, card3Ref.current];
+      
+      cards.forEach(card => {
+        if (card) {
+          const hoverTl = gsap.timeline({ paused: true });
+          
+          hoverTl.to(card, {
+            y: -8,
+            scale: 1.02,
+            duration: 0.3,
+            ease: 'power2.out'
+          });
+
+          card.addEventListener('mouseenter', () => hoverTl.play());
+          card.addEventListener('mouseleave', () => hoverTl.reverse());
+        }
+      });
+
+      // Add floating animation for background elements
+      gsap.to('.floating-dot', {
+        y: -20,
+        duration: 2,
+        ease: 'sine.inOut',
+        repeat: -1,
+        yoyo: true,
+        stagger: 0.3
+      });
+
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <section
       id='about'
@@ -8,14 +113,14 @@ const About = () => {
     >
       {/* Background elements */}
       <div className='absolute inset-0 overflow-hidden pointer-events-none'>
-        <div className='absolute top-1/4 left-1/4 w-2 h-2 bg-purple-500 rounded-full opacity-20 animate-pulse'></div>
-        <div className='absolute top-3/4 right-1/4 w-1 h-1 bg-blue-500 rounded-full opacity-30 animate-pulse delay-1000'></div>
-        <div className='absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-cyan-500 rounded-full opacity-25 animate-pulse delay-500'></div>
+        <div className='floating-dot absolute top-1/4 left-1/4 w-2 h-2 bg-purple-500 rounded-full opacity-20'></div>
+        <div className='floating-dot absolute top-3/4 right-1/4 w-1 h-1 bg-blue-500 rounded-full opacity-30'></div>
+        <div className='floating-dot absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-cyan-500 rounded-full opacity-25'></div>
       </div>
 
-      <div className='max-w-6xl mx-auto relative z-10'>
+      <div ref={sectionRef} className='max-w-6xl mx-auto relative z-10'>
         <div className='text-center mb-16'>
-          <h2 className='text-4xl md:text-5xl font-bold text-white mb-4'>
+          <h2 ref={sectionTitleRef} className='text-4xl md:text-5xl font-bold text-white mb-4'>
             <span className='bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent'>
               About Me
             </span>
@@ -26,7 +131,10 @@ const About = () => {
         <div className='grid md:grid-cols-2 gap-12 items-center'>
           {/* Profile Card */}
           <div className='relative'>
-            <div className='bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-3xl p-8 border border-gray-700/50 hover:border-purple-500/50 transition-all duration-500'>
+            <div
+              ref={selfCardRef}
+              className='bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-3xl p-8 border border-gray-700/50 hover:border-purple-500/50 transition-all duration-500'
+            >
               <div className='flex items-center mb-6'>
                 <div className='w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mr-4'>
                   <User className='w-8 h-8 text-white' />
@@ -56,7 +164,7 @@ const About = () => {
 
           {/* Description */}
           <div className='space-y-6'>
-            <div className='bg-gradient-to-br from-gray-800/30 to-gray-900/30 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/30'>
+            <div ref={card1Ref} className='bg-gradient-to-br from-gray-800/30 to-gray-900/30 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/30'>
               <p className='text-gray-300 leading-relaxed text-lg'>
                 Hi, I'm Vikraman, a self-taught full-stack web developer from India with a
                 background in public health and preventive medicine and a passion for technology. I
@@ -77,7 +185,7 @@ const About = () => {
               </p>
             </div>
 
-            <div className='bg-gradient-to-br from-gray-800/30 to-gray-900/30 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/30'>
+            <div ref={card2Ref} className='bg-gradient-to-br from-gray-800/30 to-gray-900/30 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/30'>
               <p className='text-gray-300 leading-relaxed text-lg'>
                 My journey into tech started with curiosity and has grown into a mission — to build
                 impactful software and continuously grow as a developer. Whether it's developing
@@ -86,7 +194,7 @@ const About = () => {
               </p>
             </div>
 
-            <div className='bg-gradient-to-br from-gray-800/30 to-gray-900/30 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/30'>
+            <div ref={card3Ref} className='bg-gradient-to-br from-gray-800/30 to-gray-900/30 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/30'>
               <p className='text-gray-300 leading-relaxed text-lg'>
                 I'm a strong believer in continuous learning and open-source collaboration. When I'm
                 not coding, I enjoy exploring Linux internals, contributing to forums, and playing
@@ -99,4 +207,5 @@ const About = () => {
     </section>
   );
 };
+
 export default About;
