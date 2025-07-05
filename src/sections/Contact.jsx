@@ -1,19 +1,13 @@
 import { useRef, useState } from 'react';
-import {
-  Mail,
-  Phone,
-  MapPin,
-  Send,
-  Github,
-  Linkedin,
-  Twitter,
-  ExternalLink,
-  User,
-  MessageCircle,
-} from 'lucide-react';
+import { Mail, Phone, MapPin, Send, ExternalLink, User, MessageCircle } from 'lucide-react';
+import { FaLinkedin } from 'react-icons/fa6';
+import { FaGithub } from 'react-icons/fa';
+
 import emailjs from '@emailjs/browser';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { SiLeetcode } from 'react-icons/si';
+import { FaHackerrank } from 'react-icons/fa6';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -107,7 +101,7 @@ const Contact = () => {
                   </div>
                   <div className='min-w-0 flex-1'>
                     <p className='text-gray-400 text-sm'>Phone</p>
-                    <p className='text-white font-medium text-sm md:text-base'>+91 xxx xxx xxxx</p>
+                    <p className='text-white font-medium text-sm md:text-base'>+91 95145 31375</p>
                   </div>
                 </div>
 
@@ -129,39 +123,39 @@ const Contact = () => {
               <div className='grid grid-cols-2 gap-3 md:gap-4'>
                 {/* Repeatable social links */}
                 <a
-                  href='#'
+                  href='https://github.com/ROMANVIKI'
                   className='flex items-center p-3 md:p-4 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-purple-500/50 transition-all duration-300 group'
                 >
-                  <Github className='w-5 h-5 md:w-6 md:h-6 text-gray-400 group-hover:text-purple-400 mr-2 md:mr-3' />
+                  <FaGithub className='w-5 h-5 md:w-6 md:h-6 text-gray-400 group-hover:text-purple-400 mr-2 md:mr-3' />
                   <span className='text-gray-300 group-hover:text-white text-sm md:text-base truncate'>
                     GitHub
                   </span>
                 </a>
                 <a
-                  href='#'
+                  href='https://www.linkedin.com/in/vikraman-m-4067b5252'
                   className='flex items-center p-3 md:p-4 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-blue-500/50 transition-all duration-300 group'
                 >
-                  <Linkedin className='w-5 h-5 md:w-6 md:h-6 text-gray-400 group-hover:text-blue-400 mr-2 md:mr-3' />
+                  <FaLinkedin className='w-5 h-5 md:w-6 md:h-6 text-gray-400 group-hover:text-blue-400 mr-2 md:mr-3' />
                   <span className='text-gray-300 group-hover:text-white text-sm md:text-base truncate'>
                     LinkedIn
                   </span>
                 </a>
                 <a
-                  href='#'
-                  className='flex items-center p-3 md:p-4 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-cyan-500/50 transition-all duration-300 group'
+                  href='https://www.hackerrank.com/profile/vikramanm_py'
+                  className='flex items-center p-3 md:p-4 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-green-500/50 transition-all duration-300 group'
                 >
-                  <Twitter className='w-5 h-5 md:w-6 md:h-6 text-gray-400 group-hover:text-cyan-400 mr-2 md:mr-3' />
+                  <FaHackerrank className='w-5 h-5 md:w-6 md:h-6 text-gray-400 group-hover:text-green-400 mr-2 md:mr-3' />
                   <span className='text-gray-300 group-hover:text-white text-sm md:text-base truncate'>
-                    Twitter
+                    Hackerrank
                   </span>
                 </a>
                 <a
-                  href='#'
-                  className='flex items-center p-3 md:p-4 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-pink-500/50 transition-all duration-300 group'
+                  href='https://leetcode.com/u/user9125jE/'
+                  className='flex items-center p-3 md:p-4 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-orange-500/50 transition-all duration-300 group'
                 >
-                  <ExternalLink className='w-5 h-5 md:w-6 md:h-6 text-gray-400 group-hover:text-pink-400 mr-2 md:mr-3' />
+                  <SiLeetcode className='w-5 h-5 md:w-6 md:h-6 text-gray-400 group-hover:text-orange-400 mr-2 md:mr-3' />
                   <span className='text-gray-300 group-hover:text-white text-sm md:text-base truncate'>
-                    Instagram
+                    Leetcode
                   </span>
                 </a>
               </div>

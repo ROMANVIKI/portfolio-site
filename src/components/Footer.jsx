@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Github, Linkedin, Twitter, Heart, ArrowUp } from 'lucide-react';
+import {   Heart, ArrowUp, Mail } from 'lucide-react';
+import { FaLinkedin } from "react-icons/fa6";
+import { FaGithub } from "react-icons/fa";
 const Footer = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
 
@@ -45,22 +47,22 @@ const Footer = () => {
             </p>
             <div className='flex space-x-4'>
               <a
-                href='#'
+                href='https://github.com/ROMANVIKI'
                 className='w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center hover:scale-110 transition-transform duration-300'
               >
-                <Github className='w-5 h-5 text-white' />
+                <FaGithub className='w-5 h-5 text-white' />
               </a>
               <a
-                href='#'
+                href='https://www.linkedin.com/in/vikraman-m-4067b5252'
                 className='w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center hover:scale-110 transition-transform duration-300'
               >
-                <Linkedin className='w-5 h-5 text-white' />
+                <FaLinkedin className='w-5 h-5 text-white' />
               </a>
               <a
-                href='#'
+                href='mailto:vikramanm.py@gmail.com'
                 className='w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center hover:scale-110 transition-transform duration-300'
               >
-                <Twitter className='w-5 h-5 text-white' />
+                <Mail className='w-5 h-5 text-white' />
               </a>
             </div>
           </div>
